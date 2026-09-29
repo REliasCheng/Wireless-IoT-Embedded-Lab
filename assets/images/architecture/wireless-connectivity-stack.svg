@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="title desc">
+  <title id="title">Wireless Connectivity Stack</title>
+  <desc id="desc">Application data flows through MQTT, TCP and lwIP to native Wi-Fi on AC791N/WL82. Classic Bluetooth SPP is a parallel device-data path. BLE GATT is reference-only.</desc>
+  <rect width="960" height="640" rx="20" fill="#f6f8fa"/>
+  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
+    <text x="480" y="42" font-size="26" font-weight="700" fill="#1f2328">Wireless Connectivity Stack</text>
+    <g fill="#ffffff" stroke="#57606a" stroke-width="2">
+      <rect x="250" y="70" width="460" height="76" rx="12"/>
+      <rect x="250" y="174" width="460" height="76" rx="12"/>
+      <rect x="250" y="278" width="460" height="76" rx="12"/>
+      <rect x="250" y="382" width="460" height="76" rx="12"/>
+      <rect x="250" y="486" width="460" height="76" rx="12"/>
+      <rect x="742" y="278" width="180" height="76" rx="12"/>
+      <rect x="742" y="382" width="180" height="76" rx="12" stroke-dasharray="8 6"/>
+    </g>
+    <g fill="#1f2328">
+      <text x="480" y="104" font-size="20" font-weight="700">Application / Device State</text>
+      <text x="480" y="130" font-size="15">Synthetic fields and command state</text>
+      <text x="480" y="208" font-size="20" font-weight="700">MQTT Client</text>
+      <text x="480" y="234" font-size="15">Publish / Subscribe / QoS 1 / Keep Alive</text>
+      <text x="480" y="312" font-size="20" font-weight="700">TCP / lwIP</text>
+      <text x="480" y="338" font-size="15">Socket and network adapter</text>
+      <text x="480" y="416" font-size="20" font-weight="700">Native Wi-Fi</text>
+      <text x="480" y="442" font-size="15">STA and DHCP events</text>
+      <text x="480" y="520" font-size="20" font-weight="700">AC791N / WL82</text>
+      <text x="480" y="546" font-size="15">pi32v2 R3 radio platform</text>
+      <text x="832" y="312" font-size="18" font-weight="700">Classic SPP</text>
+      <text x="832" y="338" font-size="14">Mainline enabled</text>
+      <text x="832" y="416" font-size="18" font-weight="700">BLE GATT</text>
+      <text x="832" y="442" font-size="14">Reference only</text>
+    </g>
+    <g stroke="#0969da" stroke-width="3" fill="none">
+      <path d="M480 146 V174"/>
+      <path d="M480 250 V278"/>
+      <path d="M480 354 V382"/>
+      <path d="M480 458 V486"/>
+      <path d="M710 316 H742"/>
+      <path d="M710 420 H742" stroke-dasharray="8 6"/>
+    </g>
+    <g fill="#0969da">
+      <path d="M474 166 L480 176 L486 166 Z"/>
+      <path d="M474 270 L480 280 L486 270 Z"/>
+      <path d="M474 374 L480 384 L486 374 Z"/>
+      <path d="M474 478 L480 488 L486 478 Z"/>
+      <path d="M734 310 L744 316 L734 322 Z"/>
+      <path d="M734 414 L744 420 L734 426 Z"/>
+    </g>
+    <text x="480" y="606" font-size="14" fill="#57606a">Native radio path; no external AT-command module in the mainline</text>
+  </g>
+</svg>

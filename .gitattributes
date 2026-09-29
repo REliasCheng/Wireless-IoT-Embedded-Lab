@@ -1,0 +1,10 @@
+* text=auto
+*.md text eol=lf
+*.csv text eol=lf
+*.svg text eol=lf
+*.c text
+*.h text
+
+# Preserve selected source snapshots byte-for-byte, including their original encodings and line endings.
+projects/**/course/** -text
+third_party/licenses/** -text

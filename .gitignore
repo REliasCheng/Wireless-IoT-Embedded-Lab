@@ -1,0 +1,52 @@
+# JieLi / vendor build output
+obj/
+objs/
+Objects/
+Listings/
+Debug/
+Release/
+build/
+
+# Compiled output and firmware
+*.o
+*.obj
+*.a
+*.axf
+*.elf
+*.hex
+*.bin
+*.map
+*.d
+*.dep
+*.z
+
+# IDE and tool state
+*.depend
+*.layout
+*.cbp.user
+*.workspace
+.vscode/
+.idea/
+
+# Logs, caches and recovery files
+*.log
+*.tmp
+*.bak
+*.pyc
+__pycache__/
+*.save-failed
+
+# Credentials and local environment
+.env
+.env.*
+!.env.example
+secrets/
+credentials/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# OS metadata
+.DS_Store
+Thumbs.db
