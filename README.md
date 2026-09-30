@@ -1,13 +1,13 @@
 # 无线与物联网嵌入式实验室
 ## Wireless & IoT Embedded Lab
 
-基于 JieLi AC791N / WL82 原生 Wi-Fi 与 Bluetooth 平台，围绕 lwIP、TCP、MQTT、Aliyun IoT 和 Classic SPP 数据通路组织的嵌入式无线通信仓库。
+基于 JieLi AC791N / WL82 原生 Wi-Fi 与 Bluetooth 平台，围绕 lwIP、TCP、MQTT、Aliyun IoT 和 Classic Bluetooth SPP 数据通路组织的嵌入式无线通信仓库。
 
 <p align="center">
   <img src="assets/images/architecture/wireless-connectivity-stack.svg" alt="Wireless connectivity stack" width="900">
 </p>
 
-**Platform:** AC791N / WL82 · **CPU:** pi32v2 R3 · **Network:** lwIP / TCP · **Messaging:** MQTT :1883 · **Runtime:** FreeRTOS V9.0.0
+**Platform:** AC791N / WL82 · **CPU:** pi32v2 R3 · **Network:** lwIP / TCP · **Messaging:** MQTT / TCP 1883 · **Runtime:** FreeRTOS V9.0.0
 
 ## 👋 项目简介 | Overview
 

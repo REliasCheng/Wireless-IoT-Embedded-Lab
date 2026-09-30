@@ -18,7 +18,7 @@
 - 设备已经云端上线。
 - MQTT Publish/Subscribe 已经本轮实机验证。
 - Bluetooth SPP 或 BLE 连接已验证。
-- 运输已加密。
+- 传输链路已加密。
 - 凭据生命周期或安全存储已实现。
 
 [上一篇：FreeRTOS Integration](freertos-integration.md) · [返回 README](../README.md) · [下一篇：Development Environment](development-environment.md)
