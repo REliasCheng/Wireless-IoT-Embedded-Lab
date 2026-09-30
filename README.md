@@ -78,7 +78,7 @@ Classic Bluetooth EDR/SPP 是主线启用的数据通道，与 MQTT/TCP 路径�
 
 DevKitBoard connectivity 主线：Native Wi-Fi STA、DHCP、lwIP TCP、MCU-side MQTT/Aliyun 与 Classic EDR/SPP。
 
-`Native Wi-Fi / lwIP / TCP / MQTT / Aliyun IoT / Classic SPP`
+`Native Wi-Fi / lwIP / TCP / MQTT / Aliyun IoT / Classic Bluetooth SPP`
 
 ### [BLE GATT Reference](projects/reference/ble-gatt/)
 
