@@ -14,4 +14,4 @@
 
 该快照属于 official reference。DevKitBoard 主线配置中 BLE 关闭，因此本目录不代表主线 BLE 已启用或板端连接已验证。
 
-[返回根 README](../../../README.md)
+[BLE GATT Reference 文档](../../../docs/ble-reference.md) · [Wireless Platform](../../../docs/wireless-platform.md) · [返回根 README](../../../README.md)

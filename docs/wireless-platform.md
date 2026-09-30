@@ -6,14 +6,10 @@
 
 ```text
 Application
-    ↓
-MQTT / Socket / SPP API
-    ↓
-lwIP / Bluetooth Stack
-    ↓
-Native Wi-Fi / Bluetooth Radio
-    ↓
-AC791N / WL82
+    ├── MQTT / Socket → lwIP → Native Wi-Fi
+    └── SPP           → EDR  → Native Bluetooth
+                                   ↓
+                            AC791N / WL82
 ```
 
 ## 当前配置
@@ -38,3 +34,5 @@ AC791N / WL82
 - [Connectivity Mainline](../projects/01-connectivity-mainline/)
 - [Wi-Fi Networking](wifi-networking.md)
 - [Bluetooth Classic](bluetooth-classic.md)
+
+[返回 README](../README.md) · [下一篇：Native Wi-Fi Networking](wifi-networking.md)

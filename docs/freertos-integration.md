@@ -2,7 +2,7 @@
 
 ## Runtime 关系
 
-源快照中的 FreeRTOS 版本头为 V9.0.0。无线应用主要通过 vendor OS abstraction 工作，应用文件调用 `thread_fork()` 创建 Wi-Fi、TCP 或 MQTT 工作线程。
+源快照中的 FreeRTOS 版本头为 V9.0.0。无线应用通过 vendor OS abstraction 工作，应用文件调用 `thread_fork()` 创建 Wi-Fi、TCP 或 MQTT 工作线程；公开应用层不直接展开内核调度接口。
 
 ```text
 Wi-Fi / Runtime Event
@@ -27,3 +27,5 @@ FreeRTOS V9.0.0 Kernel Context
 ## 验证状态
 
 当前没有运行时 task trace、调度记录或无线稳定性数据，也未在本机器上自动构建 vendor project。
+
+[上一篇：BLE GATT Reference](ble-reference.md) · [返回 README](../README.md) · [下一篇：Security Boundaries](security-boundaries.md)

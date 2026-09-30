@@ -1,50 +1,56 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="650" viewBox="0 0 1000 650" role="img" aria-labelledby="title desc">
   <title id="title">Wireless Connectivity Stack</title>
-  <desc id="desc">Application data flows through MQTT, TCP and lwIP to native Wi-Fi on AC791N/WL82. Classic Bluetooth SPP is a parallel device-data path. BLE GATT is reference-only.</desc>
-  <rect width="960" height="640" rx="20" fill="#f6f8fa"/>
-  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
-    <text x="480" y="42" font-size="26" font-weight="700" fill="#1f2328">Wireless Connectivity Stack</text>
-    <g fill="#ffffff" stroke="#57606a" stroke-width="2">
-      <rect x="250" y="70" width="460" height="76" rx="12"/>
-      <rect x="250" y="174" width="460" height="76" rx="12"/>
-      <rect x="250" y="278" width="460" height="76" rx="12"/>
-      <rect x="250" y="382" width="460" height="76" rx="12"/>
-      <rect x="250" y="486" width="460" height="76" rx="12"/>
-      <rect x="742" y="278" width="180" height="76" rx="12"/>
-      <rect x="742" y="382" width="180" height="76" rx="12" stroke-dasharray="8 6"/>
-    </g>
-    <g fill="#1f2328">
-      <text x="480" y="104" font-size="20" font-weight="700">Application / Device State</text>
-      <text x="480" y="130" font-size="15">Synthetic fields and command state</text>
-      <text x="480" y="208" font-size="20" font-weight="700">MQTT Client</text>
-      <text x="480" y="234" font-size="15">Publish / Subscribe / QoS 1 / Keep Alive</text>
-      <text x="480" y="312" font-size="20" font-weight="700">TCP / lwIP</text>
-      <text x="480" y="338" font-size="15">Socket and network adapter</text>
-      <text x="480" y="416" font-size="20" font-weight="700">Native Wi-Fi</text>
-      <text x="480" y="442" font-size="15">STA and DHCP events</text>
-      <text x="480" y="520" font-size="20" font-weight="700">AC791N / WL82</text>
-      <text x="480" y="546" font-size="15">pi32v2 R3 radio platform</text>
-      <text x="832" y="312" font-size="18" font-weight="700">Classic SPP</text>
-      <text x="832" y="338" font-size="14">Mainline enabled</text>
-      <text x="832" y="416" font-size="18" font-weight="700">BLE GATT</text>
-      <text x="832" y="442" font-size="14">Reference only</text>
-    </g>
-    <g stroke="#0969da" stroke-width="3" fill="none">
-      <path d="M480 146 V174"/>
-      <path d="M480 250 V278"/>
-      <path d="M480 354 V382"/>
-      <path d="M480 458 V486"/>
-      <path d="M710 316 H742"/>
-      <path d="M710 420 H742" stroke-dasharray="8 6"/>
-    </g>
-    <g fill="#0969da">
-      <path d="M474 166 L480 176 L486 166 Z"/>
-      <path d="M474 270 L480 280 L486 270 Z"/>
-      <path d="M474 374 L480 384 L486 374 Z"/>
-      <path d="M474 478 L480 488 L486 478 Z"/>
-      <path d="M734 310 L744 316 L734 322 Z"/>
-      <path d="M734 414 L744 420 L734 426 Z"/>
-    </g>
-    <text x="480" y="606" font-size="14" fill="#57606a">Native radio path; no external AT-command module in the mainline</text>
-  </g>
+  <desc id="desc">The application branches into an MQTT path over TCP, lwIP, and native Wi-Fi, and a Classic Bluetooth SPP path. Both use the integrated AC791N or WL82 radio platform. BLE GATT is reference-only.</desc>
+  <rect width="1000" height="650" rx="20" fill="#f6f8fa"/>
+  <style>
+    .box{fill:#fff;stroke:#57606a;stroke-width:2}.main{fill:#ddf4ff;stroke:#0969da;stroke-width:2}.bt{fill:#dafbe1;stroke:#1a7f37;stroke-width:2}.ref{fill:#fff8c5;stroke:#9a6700;stroke-width:2;stroke-dasharray:8 6}
+    .title{font:700 26px Arial,Helvetica,sans-serif;fill:#1f2328}.text{font:700 18px Arial,Helvetica,sans-serif;fill:#1f2328}.sub{font:14px Arial,Helvetica,sans-serif;fill:#57606a}.arrow{stroke:#57606a;stroke-width:3;fill:none;marker-end:url(#arrow)}
+  </style>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#57606a"/></marker></defs>
+  <text x="500" y="42" text-anchor="middle" class="title">Wireless Connectivity Stack</text>
+
+  <rect x="260" y="68" width="480" height="76" rx="12" class="box"/>
+  <text x="500" y="101" text-anchor="middle" class="text">Application / Device State</text>
+  <text x="500" y="127" text-anchor="middle" class="sub">data path selection and application variables</text>
+
+  <path d="M405 144V176" class="arrow"/>
+  <path d="M595 144V176" class="arrow"/>
+
+  <rect x="215" y="178" width="380" height="72" rx="12" class="main"/>
+  <text x="405" y="209" text-anchor="middle" class="text">MQTT Client</text>
+  <text x="405" y="234" text-anchor="middle" class="sub">Publish / Subscribe / QoS 1 / Keep Alive</text>
+
+  <rect x="625" y="178" width="270" height="72" rx="12" class="bt"/>
+  <text x="760" y="209" text-anchor="middle" class="text">Classic Bluetooth SPP</text>
+  <text x="760" y="234" text-anchor="middle" class="sub">EDR data channel · mainline enabled</text>
+
+  <path d="M405 250V282" class="arrow"/>
+  <path d="M760 250V386" class="arrow"/>
+
+  <rect x="215" y="284" width="380" height="72" rx="12" class="main"/>
+  <text x="405" y="315" text-anchor="middle" class="text">TCP / lwIP</text>
+  <text x="405" y="340" text-anchor="middle" class="sub">socket wrapper and network adapter</text>
+
+  <path d="M405 356V388" class="arrow"/>
+
+  <rect x="215" y="390" width="380" height="72" rx="12" class="main"/>
+  <text x="405" y="421" text-anchor="middle" class="text">Native Wi-Fi</text>
+  <text x="405" y="446" text-anchor="middle" class="sub">STA association and DHCP events</text>
+
+  <rect x="625" y="390" width="270" height="72" rx="12" class="bt"/>
+  <text x="760" y="421" text-anchor="middle" class="text">Native Bluetooth</text>
+  <text x="760" y="446" text-anchor="middle" class="sub">integrated radio stack</text>
+
+  <path d="M405 462V500" class="arrow"/>
+  <path d="M760 462V500" class="arrow"/>
+
+  <rect x="215" y="502" width="680" height="76" rx="12" class="box"/>
+  <text x="555" y="535" text-anchor="middle" class="text">AC791N / WL82</text>
+  <text x="555" y="561" text-anchor="middle" class="sub">pi32v2 R3 SoC with integrated Wi-Fi and Bluetooth</text>
+
+  <rect x="800" y="284" width="170" height="72" rx="12" class="ref"/>
+  <text x="885" y="313" text-anchor="middle" class="text">BLE GATT</text>
+  <text x="885" y="339" text-anchor="middle" class="sub">reference only</text>
+
+  <text x="500" y="620" text-anchor="middle" class="sub">Native radio architecture · no external AT-command module in the mainline</text>
 </svg>

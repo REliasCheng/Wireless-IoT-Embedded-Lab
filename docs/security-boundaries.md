@@ -1,8 +1,8 @@
 # 安全边界 | Security Boundaries
 
-## Transport
+## Transport Boundary
 
-选中 MQTT 主线通过 TCP 1883 连接。SDK 其他目录中存在 TLS/HTTPS 组件，但它们没有进入当前公开主线，也不能支持 encrypted MQTT 或 certificate validation 的结论。
+选中 MQTT 主线使用 plain MQTT over TCP 1883。SDK 其他目录中存在 TLS/HTTPS 组件，但它们没有进入当前公开主线，也不能支持 encrypted MQTT 或 certificate validation 的结论。
 
 ## Credentials
 
@@ -20,3 +20,5 @@
 - Bluetooth SPP 或 BLE 连接已验证。
 - 运输已加密。
 - 凭据生命周期或安全存储已实现。
+
+[上一篇：FreeRTOS Integration](freertos-integration.md) · [返回 README](../README.md) · [下一篇：Development Environment](development-environment.md)

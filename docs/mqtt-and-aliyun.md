@@ -2,7 +2,7 @@
 
 ## MCU-side Client
 
-主线在 MCU 侧初始化 MQTT client，通过 network adapter 建立 TCP 1883 连接，再执行 Connect、Subscribe、Publish、Yield 和 reconnect。MQTT 不是由外置模组的 AT firmware 代理。
+主线在 MCU 侧初始化 MQTT client，通过 network adapter 和芯片原生 Wi-Fi 建立 TCP 1883 连接，再执行 Connect、Subscribe、Publish、Yield 和 reconnect。MQTT 不是由外置模组的 AT firmware 代理。
 
 ```text
 Wi-Fi STA / DHCP Ready
@@ -37,3 +37,9 @@ Aliyun IoT
 ## 安全边界
 
 当前主线没有 MQTTS、证书校验或 TLS session 证据。详见 [Security Boundaries](security-boundaries.md)。
+
+## 工程入口
+
+- [Connectivity Mainline](../projects/01-connectivity-mainline/)
+
+[上一篇：TCP & lwIP](tcp-and-lwip.md) · [返回 README](../README.md) · [下一篇：Classic Bluetooth SPP](bluetooth-classic.md)

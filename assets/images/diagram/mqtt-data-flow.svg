@@ -1,36 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="360" viewBox="0 0 1040 360" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="370" viewBox="0 0 1180 370" role="img" aria-labelledby="title desc">
   <title id="title">MQTT Application Data Flow</title>
-  <desc id="desc">Synthetic application variables are encoded as JSON, passed to the MCU-side MQTT client, transported over TCP port 1883 and native Wi-Fi, and addressed to Aliyun IoT.</desc>
-  <rect width="1040" height="360" rx="20" fill="#f6f8fa"/>
-  <g font-family="Arial, Helvetica, sans-serif" text-anchor="middle">
-    <text x="520" y="42" font-size="26" font-weight="700" fill="#1f2328">MQTT Application Data Flow</text>
-    <g fill="#ffffff" stroke="#57606a" stroke-width="2">
-      <rect x="30" y="100" width="170" height="94" rx="12"/>
-      <rect x="232" y="100" width="150" height="94" rx="12"/>
-      <rect x="414" y="100" width="170" height="94" rx="12"/>
-      <rect x="616" y="100" width="160" height="94" rx="12"/>
-      <rect x="808" y="100" width="200" height="94" rx="12"/>
-    </g>
-    <g fill="#1f2328">
-      <text x="115" y="137" font-size="17" font-weight="700">Application Variables</text>
-      <text x="115" y="164" font-size="14">Synthetic values</text>
-      <text x="307" y="137" font-size="17" font-weight="700">JSON Payload</text>
-      <text x="307" y="164" font-size="14">Property fields</text>
-      <text x="499" y="137" font-size="17" font-weight="700">MQTT Client</text>
-      <text x="499" y="164" font-size="14">Publish / Subscribe</text>
-      <text x="696" y="137" font-size="17" font-weight="700">TCP :1883</text>
-      <text x="696" y="164" font-size="14">Plain transport</text>
-      <text x="908" y="137" font-size="17" font-weight="700">Native Wi-Fi</text>
-      <text x="908" y="164" font-size="14">Aliyun IoT destination</text>
-    </g>
-    <g stroke="#0969da" stroke-width="3" fill="none">
-      <path d="M200 147 H232"/><path d="M382 147 H414"/><path d="M584 147 H616"/><path d="M776 147 H808"/>
-    </g>
-    <g fill="#0969da">
-      <path d="M224 141 L234 147 L224 153 Z"/><path d="M406 141 L416 147 L406 153 Z"/><path d="M608 141 L618 147 L608 153 Z"/><path d="M800 141 L810 147 L800 153 Z"/>
-    </g>
-    <rect x="196" y="242" width="648" height="62" rx="10" fill="#fff8c5" stroke="#9a6700" stroke-width="2"/>
-    <text x="520" y="269" font-size="16" font-weight="700" fill="#633c01">Evidence boundary</text>
-    <text x="520" y="291" font-size="14" fill="#633c01">No sensor sampling, TLS session, cloud-online log, or runtime measurement is claimed.</text>
+  <desc id="desc">Synthetic application variables are encoded as JSON, passed to the MCU-side MQTT client, transported over TCP and lwIP port 1883 through native Wi-Fi, and addressed to Aliyun IoT.</desc>
+  <rect width="1180" height="370" rx="20" fill="#f6f8fa"/>
+  <style>
+    .box{fill:#fff;stroke:#57606a;stroke-width:2}.title{font:700 26px Arial,Helvetica,sans-serif;fill:#1f2328}.text{font:700 16px Arial,Helvetica,sans-serif;fill:#1f2328}.small{font:700 14px Arial,Helvetica,sans-serif;fill:#1f2328}.sub{font:14px Arial,Helvetica,sans-serif;fill:#57606a}.arrow{stroke:#0969da;stroke-width:3;fill:none;marker-end:url(#arrow)}
+  </style>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#0969da"/></marker></defs>
+  <text x="590" y="42" text-anchor="middle" class="title">MQTT Application Data Flow</text>
+
+  <g>
+    <rect x="25" y="100" width="160" height="94" rx="12" class="box"/>
+    <text x="105" y="136" text-anchor="middle" class="small">Application Variables</text>
+    <text x="105" y="164" text-anchor="middle" class="sub">synthetic values</text>
+
+    <rect x="218" y="100" width="150" height="94" rx="12" class="box"/>
+    <text x="293" y="136" text-anchor="middle" class="text">JSON Payload</text>
+    <text x="293" y="164" text-anchor="middle" class="sub">property fields</text>
+
+    <rect x="401" y="100" width="160" height="94" rx="12" class="box"/>
+    <text x="481" y="136" text-anchor="middle" class="text">MQTT Client</text>
+    <text x="481" y="164" text-anchor="middle" class="sub">MCU-side client</text>
+
+    <rect x="594" y="100" width="160" height="94" rx="12" class="box"/>
+    <text x="674" y="136" text-anchor="middle" class="text">TCP / lwIP</text>
+    <text x="674" y="164" text-anchor="middle" class="sub">plain TCP :1883</text>
+
+    <rect x="787" y="100" width="160" height="94" rx="12" class="box"/>
+    <text x="867" y="136" text-anchor="middle" class="text">Native Wi-Fi</text>
+    <text x="867" y="164" text-anchor="middle" class="sub">STA radio path</text>
+
+    <rect x="980" y="100" width="175" height="94" rx="12" class="box"/>
+    <text x="1068" y="136" text-anchor="middle" class="text">Aliyun IoT</text>
+    <text x="1068" y="164" text-anchor="middle" class="sub">topic destination</text>
   </g>
+
+  <path d="M185 147H218" class="arrow"/><path d="M368 147H401" class="arrow"/><path d="M561 147H594" class="arrow"/><path d="M754 147H787" class="arrow"/><path d="M947 147H980" class="arrow"/>
+
+  <rect x="225" y="245" width="730" height="66" rx="10" fill="#fff8c5" stroke="#9a6700" stroke-width="2"/>
+  <text x="590" y="273" text-anchor="middle" class="text" fill="#633c01">Evidence boundary</text>
+  <text x="590" y="297" text-anchor="middle" class="sub" fill="#633c01">No sensor sampling, TLS session, cloud-online log, or runtime measurement is claimed.</text>
 </svg>

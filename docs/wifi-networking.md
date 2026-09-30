@@ -5,7 +5,7 @@
 当前 Wi-Fi task 默认选择 STA mode。公开快照将 AP/STA SSID 和 password 替换为占位符，但保留连接状态机、DHCP 事件和模式切换逻辑。
 
 ```text
-Wi-Fi Module Start
+Native Wi-Fi Start
         ↓
 STA Association
         ↓
@@ -30,3 +30,5 @@ TCP / MQTT Worker
 
 - [TCP & lwIP](tcp-and-lwip.md)
 - [MQTT & Aliyun IoT](mqtt-and-aliyun.md)
+
+[上一篇：Wireless Platform](wireless-platform.md) · [返回 README](../README.md) · [下一篇：TCP & lwIP](tcp-and-lwip.md)

@@ -2,7 +2,7 @@
 
 ## 主线状态
 
-DevKitBoard 选中配置启用 Classic Bluetooth，关闭 BLE，并打开 SPP transport。该路径是 AC791N/WL82 原生 EDR stack 上的串口协议数据通道，不是 BLE UART service。
+DevKitBoard 选中配置启用 Classic Bluetooth，关闭 BLE，并打开 SPP transport。该路径直接使用 AC791N / WL82 原生 EDR stack，与 Wi-Fi/TCP/MQTT 路径并列，不是 BLE UART service。
 
 ```text
 Application Data
@@ -29,3 +29,5 @@ Native Bluetooth Radio
 
 - [Wireless Platform](wireless-platform.md)
 - [BLE GATT Reference](ble-reference.md)
+
+[上一篇：MQTT & Aliyun IoT](mqtt-and-aliyun.md) · [返回 README](../README.md) · [下一篇：BLE GATT Reference](ble-reference.md)

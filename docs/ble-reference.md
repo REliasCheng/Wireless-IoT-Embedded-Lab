@@ -22,8 +22,10 @@ GATT Service and Characteristic Discovery
 Read / Write / Notify / Indicate
 ```
 
-这些文件用于说明 SDK 的 BLE GATT 端口和主线配置边界，不代表 BLE 连接、手机交互或板端行为已验证。
+这些文件用于说明 SDK 的 BLE GATT client 接口和主线配置边界。它们不改变 DevKitBoard 主线中 `BLE disabled` 的事实，也不代表 BLE 连接、手机交互或板端行为已验证。
 
 ## 工程入口
 
 - [BLE GATT Reference](../projects/reference/ble-gatt/)
+
+[上一篇：Classic Bluetooth SPP](bluetooth-classic.md) · [返回 README](../README.md) · [下一篇：FreeRTOS Integration](freertos-integration.md)

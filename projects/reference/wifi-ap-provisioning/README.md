@@ -14,4 +14,4 @@
 
 `wifi_demo_task.c` 的 SSID、password 和 AirKiss example key 已改为公开占位值。该目录是架构参考，不表示 AP/provisioning 已在当前硬件上验证。
 
-[返回根 README](../../../README.md)
+[Native Wi-Fi Networking 文档](../../../docs/wifi-networking.md) · [Security Boundaries](../../../docs/security-boundaries.md) · [返回根 README](../../../README.md)

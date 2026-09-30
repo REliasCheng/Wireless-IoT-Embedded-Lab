@@ -27,3 +27,9 @@ MQTT client 的 network adapter 同样建立在 TCP 连接之上。本仓库的 
 ## 快照限制
 
 完整 lwIP 源码和 vendor network binary 未进入仓库。选中文件用于分析应用、socket 接口和无线事件之间的关系，不是脱离 SDK 的 standalone build。
+
+## 工程入口
+
+- [Connectivity Mainline](../projects/01-connectivity-mainline/)
+
+[上一篇：Native Wi-Fi Networking](wifi-networking.md) · [返回 README](../README.md) · [下一篇：MQTT & Aliyun IoT](mqtt-and-aliyun.md)

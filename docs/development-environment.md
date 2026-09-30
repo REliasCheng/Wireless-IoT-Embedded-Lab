@@ -30,3 +30,5 @@ BUILD_NOT_AUTOMATED=3 logical projects
 ```
 
 本阶段没有执行 installer、vendor executable、firmware、烧录、Wi-Fi/Bluetooth 连接或云端连接。
+
+[上一篇：Security Boundaries](security-boundaries.md) · [返回 README](../README.md)
