@@ -1,134 +1,90 @@
-# 无线与物联网嵌入式实验室
-## Wireless & IoT Embedded Lab
+# Wireless-IoT-Embedded-Lab
 
-基于 JieLi AC791N / WL82 原生 Wi-Fi 与 Bluetooth 平台，围绕 lwIP、TCP、MQTT、Aliyun IoT 和 Classic Bluetooth SPP 数据通路组织的嵌入式无线通信仓库。
+基于 JieLi AC791N / WL82 平台的嵌入式无线与 IoT Integration 实践仓库，重点展示 Native Wi-Fi、lwIP、TCP、MQTT 和设备侧数据通路。
 
-<p align="center">
-  <img src="assets/images/architecture/wireless-connectivity-stack.svg" alt="Wireless connectivity stack" width="900">
-</p>
+## Overview
 
-**Platform:** AC791N / WL82 · **CPU:** pi32v2 R3 · **Network:** lwIP / TCP · **Messaging:** MQTT / TCP 1883 · **Runtime:** FreeRTOS V9.0.0
+仓库围绕 AC791N / WL82 芯片原生 Wi-Fi 与 Bluetooth 能力组织应用和接口代码。主线使用 Native Wi-Fi STA、DHCP 事件、lwIP socket、TCP 和 MCU-side MQTT 连接 IoT 服务，并保留 Classic Bluetooth EDR/SPP 作为并列通信路径。
 
-## 👋 项目简介 | Overview
+BLE GATT、Wi-Fi AP、scan 和 provisioning 仅作为独立 Reference，不属于主线当前启用功能。仓库用于说明无线软件栈、网络传输和 IoT 接口之间的关系，不描述为完整、商业化或已经在线验证的 IoT 产品。
 
-AC791N / WL82 在芯片与 vendor SDK 内提供 Wi-Fi 和 Bluetooth 能力，不采用 MCU 经 UART 控制外置 Wi-Fi 模组的 AT 架构。公开主线保留 Native Wi-Fi STA、lwIP TCP、MCU-side MQTT、Aliyun IoT 数据通路以及 Classic Bluetooth EDR/SPP；BLE GATT 与 Wi-Fi AP/provisioning 作为独立 reference。
+## Platform & Technology
 
-仓库是经过许可、凭据和技术边界筛选的应用与接口快照，不包含完整 vendor SDK，也不能脱离 JieLi 工具链独立构建。公开派生文件中的连接凭据已替换为占位符。
+| Field | Value |
+| --- | --- |
+| Language | C |
+| Platform | JieLi AC791N / WL82, pi32v2 R3 |
+| Toolchain | JieLi pi32v2 Clang/LLVM, Makefile, Code::Blocks project files |
+| Architecture | Native Wi-Fi → lwIP → TCP → MQTT → IoT Integration; Classic Bluetooth SPP |
+| Verification | Source and interface review; build, hardware and runtime status are listed below |
 
-## ⚙ 技术范围 | Technical Scope
+## Architecture
 
-### 📡 Native Wireless
+![Wireless connectivity stack](assets/images/architecture/wireless-connectivity-stack.svg)
 
-- JieLi AC791N / WL82, pi32v2 R3
-- Native Wi-Fi STA and DHCP events
-- Classic Bluetooth EDR / SPP enabled in the mainline
-
-### 🌐 Network Stack
-
-- lwIP socket interface
-- TCP client and network-ready state
-- Native radio path without an external AT-command module
-
-### ☁ MQTT & IoT
-
-- MCU-side MQTT client
-- Publish / Subscribe, QoS 1, Keep Alive and reconnect flow
-- Aliyun IoT topic and application payload path over plain TCP port 1883
-
-### 🧪 References
-
-- BLE GATT client reference; disabled in the mainline configuration
-- Wi-Fi AP, scan and provisioning reference
-
-## 📡 原生无线平台 | Native Wireless
-
-主线应用通过芯片原生网络与 Bluetooth stack 建立两条通信路径：
+主线网络能力按以下层次连接：
 
 ```text
-Application
-    ├── MQTT → TCP / lwIP → Native Wi-Fi → Aliyun IoT
-    └── SPP  → Classic Bluetooth EDR → Peer Device
+Native Wi-Fi
+      ↓
+lwIP
+      ↓
+TCP
+      ↓
+MQTT
+      ↓
+IoT Integration
 ```
 
-BLE GATT 只保留为 SDK reference，不属于 DevKitBoard 主线当前启用配置。平台与配置证据见 [Wireless Platform](docs/wireless-platform.md)。
+Application 通过 MQTT client 和 lwIP socket wrapper 进入 Native Wi-Fi；Classic Bluetooth EDR/SPP 使用芯片原生 Bluetooth stack，与 MQTT/TCP 路径并列。BLE GATT 只保留 Reference 入口，不改变主线中 BLE 未启用的事实。
 
-## 🌐 TCP 与 MQTT | TCP & MQTT
+## Key Features
 
-Wi-Fi STA 获得 DHCP 地址后，应用工作线程通过 lwIP socket wrapper 建立 TCP 连接；MQTT client 在同一路径上执行 Connect、Subscribe、Publish、Yield 和 reconnect。
+| Capability | Implementation Entry |
+| --- | --- |
+| Native Wi-Fi integration | [Wireless Platform](docs/wireless-platform.md) 与 [Native Wi-Fi Networking](docs/wifi-networking.md) 说明 STA、DHCP 事件和网络就绪状态 |
+| lwIP TCP communication | [TCP and lwIP](docs/tcp-and-lwip.md) 展示 socket wrapper、TCP client 和网络状态检查 |
+| MQTT transport | [MQTT and Aliyun IoT](docs/mqtt-and-aliyun.md) 展示 Connect、Subscribe、Publish、Yield 和 reconnect 路径 |
+| IoT service integration | [Mainline Connectivity Project](projects/01-connectivity-mainline/) 连接 JSON payload、MQTT topic 和 Aliyun IoT 接口 |
+| Bluetooth boundary | [Classic Bluetooth SPP](docs/bluetooth-classic.md) 是主线通道；[BLE GATT](docs/ble-reference.md) 明确标记为 Reference |
 
-- [Native Wi-Fi Networking](docs/wifi-networking.md)
-- [TCP & lwIP](docs/tcp-and-lwip.md)
-- [MQTT & Aliyun IoT](docs/mqtt-and-aliyun.md)
+主线 MQTT 使用 plain TCP 1883，不包含 MQTTS、TLS session 或证书校验。示例中的 temperature 和 humidity 来自软件变量，仅用于呈现数据通路，不是传感器采样证据。
 
-## 🔵 Bluetooth | Bluetooth
-
-Classic Bluetooth EDR/SPP 是主线启用的数据通道，与 MQTT/TCP 路径并列；它不是 BLE UART service。BLE client 的 UUID 匹配、Characteristic Read/Write 与 Notify/Indicate 保留在 [BLE GATT Reference](docs/ble-reference.md) 中。
-
-## ☁ IoT 数据通路 | IoT Data Flow
-
-<p align="center">
-  <img src="assets/images/diagram/mqtt-data-flow.svg" alt="MQTT application data flow" width="900">
-</p>
-
-示例 payload 中的 temperature / humidity 字段来自循环递增的软件变量，只用于呈现 JSON → MQTT → TCP → Aliyun IoT 数据通路，不是传感器采样证据。主线使用 plain MQTT over TCP 1883；当前没有 TLS session 或云端在线运行记录。
-
-## 🚀 核心工程 | Featured Entries
-
-### [Mainline Connectivity Project](projects/01-connectivity-mainline/)
-
-DevKitBoard connectivity 主线：Native Wi-Fi STA、DHCP、lwIP TCP、MCU-side MQTT/Aliyun 与 Classic EDR/SPP。
-
-`Native Wi-Fi / lwIP / TCP / MQTT / Aliyun IoT / Classic Bluetooth SPP`
-
-### [BLE GATT Reference](projects/reference/ble-gatt/)
-
-官方 BLE client reference，保留 UUID 匹配、Characteristic Read/Write 与 Notification/Indication 入口。
-
-`BLE / GATT / Reference Only`
-
-### [Wi-Fi AP & Provisioning Reference](projects/reference/wifi-ap-provisioning/)
-
-官方 Wi-Fi reference，补充 AP、scan 与 provisioning 的模式和事件入口。
-
-`Wi-Fi AP / Scan / Provisioning / Reference Only`
-
-## 📂 仓库结构 | Repository Structure
+## Project Structure
 
 ```text
 Wireless-IoT-Embedded-Lab/
-├── assets/images/           # 自有连接架构与数据流图
-├── docs/                    # 无线、网络、MQTT、RTOS 与安全边界
-├── projects/
-│   ├── 01-connectivity-mainline/
-│   └── reference/
-│       ├── ble-gatt/
-│       └── wifi-ap-provisioning/
-├── third_party/licenses/    # 已选第三方文件对应的许可证据
-├── SOURCE_SELECTION_MANIFEST.csv
-└── MIGRATION_HASH_VERIFICATION.csv
+├── projects/01-connectivity-mainline/       # Native Wi-Fi、TCP、MQTT 与 Classic SPP 主线
+├── projects/reference/ble-gatt/             # BLE GATT Reference
+├── projects/reference/wifi-ap-provisioning/ # AP、scan 与 provisioning Reference
+├── docs/                                    # 无线、网络、MQTT、RTOS 与安全边界
+├── third_party/licenses/                    # 已保留的第三方许可文本
+└── assets/images/                           # 已有自绘架构与数据流 SVG
 ```
 
-## 🛠 开发环境 | Development Environment
-
-- JieLi AC791N / WL82 platform
-- pi32v2 R3 vendor Clang/LLVM toolchain
-- Original Makefile / Code::Blocks project organization
-- FreeRTOS V9.0.0 through vendor OS abstraction
-
-当前机器未发现 JieLi pi32v2 工具链，3 个逻辑工程均未执行自动构建；本阶段也未执行烧录、无线连接或 Aliyun IoT 连接。详见 [Development Environment](docs/development-environment.md)。
-
-## 📖 技术文档 | Documentation
+## Documentation
 
 - [Wireless Platform](docs/wireless-platform.md)
 - [Native Wi-Fi Networking](docs/wifi-networking.md)
-- [TCP & lwIP](docs/tcp-and-lwip.md)
-- [MQTT & Aliyun IoT](docs/mqtt-and-aliyun.md)
+- [TCP and lwIP](docs/tcp-and-lwip.md)
+- [MQTT and Aliyun IoT](docs/mqtt-and-aliyun.md)
 - [Classic Bluetooth SPP](docs/bluetooth-classic.md)
 - [BLE GATT Reference](docs/ble-reference.md)
 - [FreeRTOS Integration](docs/freertos-integration.md)
 - [Security Boundaries](docs/security-boundaries.md)
 - [Development Environment](docs/development-environment.md)
 
-## 📜 来源与许可 | License
+## Verification
 
-仓库新编写的 README、技术文档和 SVG 适用根目录 [LICENSE](LICENSE)。选中的 vendor / third-party 文件继续受其原始许可条款和文件头约束，详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+| Verification Type | Status | Boundary |
+| --- | --- | --- |
+| Host Test | N/A | 仓库没有独立的 Host Test 入口 |
+| Build Verification | NOT VERIFIED | 工程和构建入口存在，但仓库未提供与当前公开版本对应的 pi32v2 工具链构建记录 |
+| Hardware Validation | NOT VERIFIED | 仓库未提供可复核的 Wi-Fi、Classic Bluetooth 或 BLE 板端验证记录 |
+| Runtime Evidence | NOT INCLUDED | 仓库未提供 DHCP、TCP、MQTT、Aliyun IoT 或 Bluetooth 连接日志作为运行证据 |
+
+源码中的网络状态、MQTT 调用和 payload 字段不等同于构建成功、无线连接完成或云端服务在线验证。
+
+## License Boundary
+
+根目录 [LICENSE](LICENSE) 仅适用于仓库新增并明确覆盖的 README、技术文档和自绘 SVG。JieLi vendor 文件、MQTT 接口、FreeRTOS 组件及其他第三方内容继续适用原有文件头和许可条款，具体边界见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
