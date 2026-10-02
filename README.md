@@ -76,12 +76,21 @@ Wireless-IoT-Embedded-Lab/
 
 ## Verification
 
-| Verification Type | Status | Boundary |
-| --- | --- | --- |
-| Host Test | Not Applicable | 仓库没有独立的 Host Test 入口 |
-| Build Verification | Not Provided | 工程和构建入口存在，但仓库未提供与当前公开版本对应的 pi32v2 工具链构建记录 |
-| Hardware Validation | Not Provided | 仓库未提供可复核的 Wi-Fi、Classic Bluetooth 或 BLE 板端验证记录 |
-| Runtime Evidence | Not Provided | 仓库未提供 DHCP、TCP、MQTT、Aliyun IoT 或 Bluetooth 连接日志作为运行证据 |
+### Host Test
+
+**Status:** Not Applicable. 仓库没有独立的 Host Test 入口。
+
+### Build Verification
+
+**Status:** Not Provided. 工程和构建入口存在，但仓库未提供与当前公开版本对应的 pi32v2 工具链构建记录。
+
+### Hardware Validation
+
+**Status:** Not Provided. 仓库未提供可复核的 Wi-Fi、Classic Bluetooth 或 BLE 板端验证记录。
+
+### Runtime Evidence
+
+**Status:** Not Provided. 仓库未提供 DHCP、TCP、MQTT、Aliyun IoT 或 Bluetooth 连接日志作为运行证据。
 
 源码中的网络状态、MQTT 调用和 payload 字段不等同于构建成功、无线连接完成或云端服务在线验证。
 
