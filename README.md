@@ -2,13 +2,9 @@
 
 基于 JieLi AC791N / WL82 平台的嵌入式无线与 IoT Integration 实践仓库，重点展示 Native Wi-Fi、lwIP、TCP、MQTT 和设备侧数据通路。
 
-## Overview
+![Embedded connectivity path](assets/images/architecture/portfolio-overview.svg)
 
-仓库围绕 AC791N / WL82 芯片原生 Wi-Fi 与 Bluetooth 能力组织应用和接口代码。主线使用 Native Wi-Fi STA、DHCP 事件、lwIP socket、TCP 和 MCU-side MQTT 连接 IoT 服务，并保留 Classic Bluetooth EDR/SPP 作为并列通信路径。
-
-BLE GATT、Wi-Fi AP、scan 和 provisioning 仅作为独立 Reference，不属于主线当前启用功能。仓库用于说明无线软件栈、网络传输和 IoT 接口之间的关系，不描述为完整、商业化或已经在线验证的 IoT 产品。
-
-## Platform & Technology
+## Project Snapshot
 
 | Field | Value |
 | --- | --- |
@@ -17,6 +13,14 @@ BLE GATT、Wi-Fi AP、scan 和 provisioning 仅作为独立 Reference，不属�
 | Toolchain | JieLi pi32v2 Clang/LLVM, Makefile, Code::Blocks project files |
 | Architecture | Native Wi-Fi → lwIP → TCP → MQTT → IoT Integration; Classic Bluetooth SPP |
 | Verification | Source and interface review; build, hardware and runtime status are listed below |
+
+> **Project status:** Architecture documented · Host Test not applicable · Build, hardware, and runtime evidence not provided
+
+## Overview
+
+仓库围绕 AC791N / WL82 芯片原生 Wi-Fi 与 Bluetooth 能力组织应用和接口代码。主线使用 Native Wi-Fi STA、DHCP 事件、lwIP socket、TCP 和 MCU-side MQTT 连接 IoT 服务，并保留 Classic Bluetooth EDR/SPP 作为并列通信路径。
+
+BLE GATT、Wi-Fi AP、scan 和 provisioning 仅作为独立 Reference，不属于主线当前启用功能。仓库用于说明无线软件栈、网络传输和 IoT 接口之间的关系，不描述为完整、商业化或已经在线验证的 IoT 产品。
 
 ## Architecture
 
