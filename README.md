@@ -18,13 +18,13 @@
 
 > 📨 **Evidence:** Connectivity paths documented · Build, wireless connection, and runtime evidence not provided
 
-## Overview
+## 📌 Overview
 
 仓库围绕 AC791N / WL82 芯片原生 Wi-Fi 与 Bluetooth 能力组织应用和接口代码。主线使用 Native Wi-Fi STA、DHCP 事件、lwIP socket、TCP 和 MCU-side MQTT 连接 IoT 服务，并保留 Classic Bluetooth EDR/SPP 作为并列通信路径。
 
 BLE GATT、Wi-Fi AP、scan 和 provisioning 仅作为独立 Reference，不属于主线当前启用功能。仓库用于说明无线软件栈、网络传输和 IoT 接口之间的关系，不描述为完整、商业化或已经在线验证的 IoT 产品。
 
-## Architecture
+## 🏗️ Architecture
 
 ![Wireless connectivity stack](assets/images/architecture/wireless-connectivity-stack.svg)
 
@@ -46,7 +46,7 @@ IoT Integration
 
 Application 通过 MQTT client 和 lwIP socket wrapper 进入 Native Wi-Fi；Classic Bluetooth EDR/SPP 使用芯片原生 Bluetooth stack，与 MQTT/TCP 路径并列。BLE GATT 只保留 Reference 入口，不改变主线中 BLE 未启用的事实。
 
-## Key Features
+## ✨ Key Features
 
 | Capability | Implementation Entry |
 | --- | --- |
@@ -58,7 +58,7 @@ Application 通过 MQTT client 和 lwIP socket wrapper 进入 Native Wi-Fi；Cla
 
 主线 MQTT 使用 plain TCP 1883，不包含 MQTTS、TLS session 或证书校验。示例中的 temperature 和 humidity 来自软件变量，仅用于呈现数据通路，不是传感器采样证据。
 
-## Project Structure
+## 📂 Project Structure
 
 ```text
 Wireless-IoT-Embedded-Lab/
@@ -70,7 +70,7 @@ Wireless-IoT-Embedded-Lab/
 └── assets/images/                           # 已有自绘架构与数据流 SVG
 ```
 
-## Documentation
+## 📚 Documentation
 
 - [Wireless Platform](docs/wireless-platform.md)
 - [Native Wi-Fi Networking](docs/wifi-networking.md)
@@ -82,21 +82,21 @@ Wireless-IoT-Embedded-Lab/
 - [Security Boundaries](docs/security-boundaries.md)
 - [Development Environment](docs/development-environment.md)
 
-## Verification
+## 🧪 Verification
 
-### Host Test
+### 💻 Host Test
 
 **Status:** Not Applicable. 仓库没有独立的 Host Test 入口。
 
-### Build Verification
+### 🔨 Build Verification
 
 **Status:** Not Provided. 工程和构建入口存在，但仓库未提供与当前公开版本对应的 pi32v2 工具链构建记录。
 
-### Hardware Validation
+### 🔌 Hardware Validation
 
 **Status:** Not Provided. 仓库未提供可复核的 Wi-Fi、Classic Bluetooth 或 BLE 板端验证记录。
 
-### Runtime Evidence
+### 📊 Runtime Evidence
 
 **Status:** Not Provided. 仓库未提供 DHCP、TCP、MQTT、Aliyun IoT 或 Bluetooth 连接日志作为运行证据。
 
