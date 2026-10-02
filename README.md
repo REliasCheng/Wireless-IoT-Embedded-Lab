@@ -2,19 +2,21 @@
 
 基于 JieLi AC791N / WL82 平台的嵌入式无线与 IoT Integration 实践仓库，重点展示 Native Wi-Fi、lwIP、TCP、MQTT 和设备侧数据通路。
 
+**📡 Connectivity Stack**
+
 ![Embedded connectivity path](assets/images/architecture/portfolio-overview.svg)
 
-## Project Snapshot
+## Connectivity Snapshot
 
-| Field | Value |
+| Connectivity Focus | Current Scope |
 | --- | --- |
-| Language | C |
-| Platform | JieLi AC791N / WL82, pi32v2 R3 |
-| Toolchain | JieLi pi32v2 Clang/LLVM, Makefile, Code::Blocks project files |
-| Architecture | Native Wi-Fi → lwIP → TCP → MQTT → IoT Integration; Classic Bluetooth SPP |
-| Verification | Source and interface review; build, hardware and runtime status are listed below |
+| Device Platform | JieLi AC791N / WL82、pi32v2 R3 |
+| Network Stack | Native Wi-Fi → lwIP → TCP |
+| MQTT Transport | Plain TCP 1883；no TLS / MQTTS claim |
+| Parallel Path | Classic Bluetooth EDR/SPP；BLE GATT is Reference only |
+| Evidence | Source and interface review；build, connection and runtime evidence not provided |
 
-> **Project status:** Architecture documented · Host Test not applicable · Build, hardware, and runtime evidence not provided
+> 📨 **Evidence:** Connectivity paths documented · Build, wireless connection, and runtime evidence not provided
 
 ## Overview
 
@@ -25,6 +27,8 @@ BLE GATT、Wi-Fi AP、scan 和 provisioning 仅作为独立 Reference，不属�
 ## Architecture
 
 ![Wireless connectivity stack](assets/images/architecture/wireless-connectivity-stack.svg)
+
+### 🌐 Network Path
 
 主线网络能力按以下层次连接：
 
