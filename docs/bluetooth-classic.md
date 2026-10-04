@@ -1,8 +1,8 @@
 # Classic Bluetooth SPP
 
-## 主线状态
+## Reference Boundary
 
-DevKitBoard 选中配置启用 Classic Bluetooth，关闭 BLE，并打开 SPP transport。该路径直接使用 AC791N / WL82 原生 EDR stack，与 Wi-Fi/TCP/MQTT 路径并列，不是 BLE UART service。
+Classic Bluetooth SPP 是与 Wi-Fi/TCP/MQTT 并列的参考路径，不是 BLE UART service。当前默认分支不包含 SPP 实现或 vendor radio stack。
 
 ```text
 Application Data
@@ -14,16 +14,16 @@ RFCOMM / EDR Stack
 Native Bluetooth Radio
 ```
 
-## 工程关系
+## Interface Model
 
-[spp_trans_data.c](../projects/01-connectivity-mainline/course/apps/demo/demo_DevKitBoard/spp_trans_data.c) 保留：
+典型 SPP 集成需要：
 
 - SPP 发送接口。
 - 连接状态与发送唤醒回调。
 - 数据接收回调。
 - 可选 RFCOMM credits 流控。
 
-代码路径表明协议接口存在；仓库没有附带配对、连接、吞吐或板端数据收发的运行记录。
+这些接口仅作为架构模型；仓库没有配对、连接、吞吐或板端数据收发的运行记录。
 
 ## 相关入口
 

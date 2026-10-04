@@ -2,11 +2,11 @@
 
 ## Reference 定位
 
-BLE 代码来自独立的 official demo。该 demo 的配置启用 BLE、关闭 Classic Bluetooth；DevKitBoard 主线则相反，因此 BLE 不属于主线当前启用配置。
+BLE GATT 仅作为并列技术参考，不属于本仓库的 Native Wi-Fi → lwIP → TCP → MQTT 主线。当前默认分支不包含 BLE demo 或 vendor SDK。
 
 ## GATT 路径
 
-[ble.c](../projects/reference/ble-gatt/course/apps/demo/demo_ble/bt_ble/ble.c) 包含：
+典型 BLE client 路径包含：
 
 - BLE client 初始化。
 - 设备名称和 UUID 匹配。
@@ -22,10 +22,6 @@ GATT Service and Characteristic Discovery
 Read / Write / Notify / Indicate
 ```
 
-这些文件用于说明 SDK 的 BLE GATT client 接口和主线配置边界。它们不改变 DevKitBoard 主线中 `BLE disabled` 的事实，也不代表 BLE 连接、手机交互或板端行为已验证。
-
-## 工程入口
-
-- [BLE GATT Reference](../projects/reference/ble-gatt/)
+这些接口名称只说明协议角色，不代表 BLE 连接、手机交互或板端行为已实现或验证。
 
 [上一篇：Classic Bluetooth SPP](bluetooth-classic.md) · [返回 README](../README.md) · [下一篇：FreeRTOS Integration](freertos-integration.md)

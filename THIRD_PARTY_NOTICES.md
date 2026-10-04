@@ -1,21 +1,13 @@
 # Third-Party Notices
 
-The repository-level `LICENSE` applies only to newly authored repository documentation and SVG diagrams. Selected source snapshots remain governed by their original notices and licenses.
+## Current Default Branch
 
-## JieLi AC79 SDK
+The current default branch distributes no JieLi SDK source, `itheima` course code, Paho MQTT source or interface copy, FreeRTOS source, vendor binary, certificate, private key, external image, font, or firmware artifact.
 
-Selected application, configuration, and interface files originate from the JieLi AC79 SDK tree. The source package includes an Apache License 2.0 file, preserved at [`third_party/licenses/JieLi-AC79-SDK-LICENSE.txt`](third_party/licenses/JieLi-AC79-SDK-LICENSE.txt). Existing source notices are retained.
+## Referenced Technologies
 
-This repository does not redistribute the complete SDK, vendor tools, firmware, prebuilt libraries, installers, or unrelated product trees.
+Documentation may refer to JieLi AC79/WL82, Native Wi-Fi, lwIP, MQTT, Paho, FreeRTOS, Classic Bluetooth, BLE, and Aliyun IoT. These references provide technical context only and do not redistribute or relicense those components.
 
-## Eclipse Paho Embedded C interfaces
+## Excluded Source Material
 
-Selected MQTT interface headers identify IBM contributors and state that they are available under the Eclipse Public License 1.0 and Eclipse Distribution License 1.0. Their original headers are retained. The repository does not import the complete upstream samples or test tree.
-
-## FreeRTOS V9.0.0
-
-The selected FreeRTOS interface/configuration snapshot retains its original copyright and the stated GNU General Public License version 2 with the FreeRTOS exception. The repository-level MIT License does not replace those terms.
-
-## Components intentionally not redistributed
-
-The public selection excludes complete lwIP/Bluetooth/TLS source trees, TLS private-key fixtures, Python LinkKit examples, Aliyun signing samples, vendor binaries, PDFs, board drawings, installers, and other material whose technical or redistribution boundary is outside this repository.
+Course additions, uncertain SDK subsets, credential-bearing examples, TLS fixtures, complete protocol stacks, vendor tools, and files without established redistribution permission are excluded from the current default branch. Earlier commits remain reachable because repository history was not rewritten.

@@ -2,7 +2,7 @@
 
 ## 平台边界
 
-主线平台是 JieLi AC791N/WL82，CPU 目标为 pi32v2 R3。Wi-Fi 与 Bluetooth 由芯片及 vendor SDK 原生提供，不存在 MCU 经 UART 控制 ESP8266 类 AT 模组的主线结构。
+参考平台是 JieLi AC791N/WL82，CPU 目标为 pi32v2 R3。架构模型使用芯片与 vendor SDK 的 Native Wi-Fi/Bluetooth 能力，不是 MCU 经 UART 控制外置 AT 模组的结构。
 
 ```text
 Application
@@ -12,16 +12,9 @@ Application
                             AC791N / WL82
 ```
 
-## 当前配置
+## Current Boundary
 
-[DevKitBoard configuration](../projects/01-connectivity-mainline/course/apps/demo/demo_DevKitBoard/include/app_config.h) 显示：
-
-- Classic Bluetooth 开启。
-- SPP 数据通道开启。
-- BLE 关闭。
-- Wi-Fi demo 和 MCU-side MQTT 应用入口存在。
-
-仓库保留的是应用与接口快照，不包含完整 SDK、radio binary 或 vendor toolchain，因此不将源文件存在解释为当前构建或板端运行证据。
+当前默认分支不包含应用、配置、SDK、radio binary 或 vendor toolchain。Native Wi-Fi、Classic Bluetooth 与 BLE 的启用状态必须由未来实现明确配置；本文档只定义技术路线。
 
 ## 与其他仓库的边界
 
@@ -31,7 +24,6 @@ Application
 
 ## 相关入口
 
-- [Connectivity Mainline](../projects/01-connectivity-mainline/)
 - [Wi-Fi Networking](wifi-networking.md)
 - [Bluetooth Classic](bluetooth-classic.md)
 

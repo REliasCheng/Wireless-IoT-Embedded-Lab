@@ -9,9 +9,9 @@
 - Network stack: vendor integration around lwIP
 - Runtime: FreeRTOS V9.0.0 through vendor OS abstraction
 
-## 公开快照结构
+## Current Branch Boundary
 
-仓库只保留经许可、凭据和技术边界筛选的应用、配置与接口文件。下列内容不在公开快照内：
+当前默认分支只保留原创架构文档与自绘 SVG。下列内容不在当前分支内：
 
 - vendor prebuilt libraries, firmware and flashing tools
 - complete lwIP / Bluetooth / media / UI product trees
@@ -21,12 +21,12 @@
 
 ## Build Status
 
-当前机器可找到通用 GCC，但未找到 JieLi pi32v2 vendor compiler。公开仓库也刻意不包含完整 SDK 与预编译依赖，因此：
+当前仓库没有完整 SDK、vendor compiler、工程文件或预编译依赖，因此：
 
 ```text
 BUILD_PASS=0
 BUILD_FAIL=0
-BUILD_NOT_AUTOMATED=3 logical projects
+BUILD_NOT_AVAILABLE=YES
 ```
 
 本阶段没有执行 installer、vendor executable、firmware、烧录、Wi-Fi/Bluetooth 连接或云端连接。
