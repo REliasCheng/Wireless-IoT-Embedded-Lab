@@ -1,0 +1,31 @@
+cmake_minimum_required(VERSION 3.20)
+project(wireless_iot_host LANGUAGES C)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+include(CTest)
+
+option(IOT_ENABLE_NETWORK "Build libmosquitto device and real Broker tests" ON)
+
+add_library(device_model app/device_model.c)
+target_include_directories(device_model PUBLIC include)
+add_executable(test_device_model tests/test_device_model.c)
+target_link_libraries(test_device_model PRIVATE device_model)
+if(BUILD_TESTING)
+  add_test(NAME device_model COMMAND test_device_model)
+endif()
+
+if(IOT_ENABLE_NETWORK)
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(MOSQUITTO REQUIRED IMPORTED_TARGET libmosquitto)
+  find_package(Python3 REQUIRED COMPONENTS Interpreter)
+  add_executable(iot_device app/host_mqtt_device.c)
+  target_link_libraries(iot_device PRIVATE device_model PkgConfig::MOSQUITTO)
+  if(BUILD_TESTING)
+    foreach(scenario normal_qos0 normal_qos1 invalid_command reconnect unavailable)
+      add_test(NAME mqtt_${scenario}
+        COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/mqtt_integration.py
+        --scenario ${scenario} --device $<TARGET_FILE:iot_device>)
+      set_tests_properties(mqtt_${scenario} PROPERTIES TIMEOUT 35)
+    endforeach()
+  endif()
+endif()
