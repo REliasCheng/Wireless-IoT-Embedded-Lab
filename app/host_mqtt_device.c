@@ -63,8 +63,8 @@ static void on_connect(struct mosquitto *client, void *user, int rc)
     }
     else result = mosquitto_subscribe(client, &s->subscribe_mid, s->model.command_topic, 1);
     if(result != MOSQ_ERR_SUCCESS) {
-        mosquitto_disconnect(client);
         backoff(s, "subscribe_enqueue_failed");
+        mosquitto_disconnect(client);
         return;
     }
     s->subscribe_deadline_ms = now_ms() + 2000;
@@ -77,8 +77,8 @@ static void on_subscribe(struct mosquitto *unused, void *user, int mid, int qos_
     (void)unused;
     service_t *s = user;
     if(mid != s->subscribe_mid || qos_count != 1 || granted_qos == NULL || granted_qos[0] == 0x80) {
-        mosquitto_disconnect(s->client);
         backoff(s, "suback_failed");
+        mosquitto_disconnect(s->client);
         return;
     }
     state(s, DEVICE_SUBSCRIBED);
@@ -224,12 +224,12 @@ int main(int argc, char **argv)
         if(s.model.state == DEVICE_BACKOFF && now >= s.next_retry_ms) attempt_reconnect(&s);
         if((s.model.state == DEVICE_CONNECTING || s.model.state == DEVICE_RECONNECTING) &&
            now > s.connect_deadline_ms) {
-            mosquitto_disconnect(s.client);
             backoff(&s, "connect_timeout");
+            mosquitto_disconnect(s.client);
         }
         if(s.model.state == DEVICE_CONNECTED && now > s.subscribe_deadline_ms) {
-            mosquitto_disconnect(s.client);
             backoff(&s, "suback_timeout");
+            mosquitto_disconnect(s.client);
         }
         if(s.model.state == DEVICE_RUNNING && now - s.last_telemetry_ms >= 500) {
             if(!device_telemetry_json(&s.model, payload, sizeof(payload))) { s.fatal = true; break; }
@@ -248,8 +248,8 @@ int main(int argc, char **argv)
                 fflush(stdout);
             }
             else {
-                mosquitto_disconnect(s.client);
                 backoff(&s, "telemetry_publish_failed");
+                mosquitto_disconnect(s.client);
             }
         }
         if(s.model.state != DEVICE_BACKOFF && s.model.state != DEVICE_FAILED) {
