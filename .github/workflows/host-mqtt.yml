@@ -35,7 +35,7 @@ jobs:
         if: always()
         with:
           name: mqtt-evidence-${{ matrix.compiler }}
-          path: artifacts/
+          path: build/artifacts/
           if-no-files-found: warn
 
   sanitizers:
@@ -58,5 +58,5 @@ jobs:
         if: always()
         with:
           name: mqtt-evidence-sanitizers
-          path: artifacts/
+          path: build-san/artifacts/
           if-no-files-found: warn

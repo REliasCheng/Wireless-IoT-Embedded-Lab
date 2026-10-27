@@ -107,17 +107,24 @@ class Lab:
 
     def subscriber(self, topic, timeout=7):
         tag = uuid.uuid4().hex[:8]
+        client_id = "sub_" + tag
         debug = self.root / f"sub-{tag}.log"
         handle = debug.open("wb")
         self._handles.append(handle)
         process = subprocess.Popen(
             ["mosquitto_sub", "-h", "127.0.0.1", "-p", str(self.port),
-             "-V", "mqttv311", "-i", "sub_" + tag, "-t", topic,
-             "-q", "1", "-C", "1", "-W", str(timeout), "-F", "%p", "-d"],
+             "-V", "mqttv311", "-i", client_id, "-t", topic,
+             "-q", "1", "-C", "1", "-W", str(timeout), "-F", "%p"],
             stdout=subprocess.PIPE, stderr=handle, text=True,
         )
-        until(lambda: "received SUBACK" in text(debug), 4,
-              f"subscriber did not receive SUBACK: {text(debug)}")
+
+        def subscribed():
+            if process.poll() is not None:
+                raise RuntimeError(f"subscriber exited rc={process.returncode}: {text(debug)}")
+            return f"Sending SUBACK to {client_id}" in text(self.broker_log)
+
+        until(subscribed, 4,
+              f"Broker did not confirm subscriber {client_id}: {text(debug)}; {text(self.broker_log)}")
         return process
 
     def publish(self, topic, payload, qos=1):
