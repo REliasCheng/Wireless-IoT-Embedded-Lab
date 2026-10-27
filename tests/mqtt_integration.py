@@ -190,8 +190,12 @@ def invalid(lab):
     lab.start_broker()
     lab.start_device()
     lab.wait_device("EVENT RUNNING")
-    first = lab.command('{"v":1,"request_id":2,"command":"set_switch","value":1}', (True, 1))
-    require(first["reason"] == "ok", "valid command failed")
+    command = '{"v":1,"request_id":2,"command":"set_switch","value":1}'
+    # No ACK subscriber exists for this first send; retry must be idempotent.
+    lab.publish(lab.prefix + "/command", command)
+    lab.wait_device("EVENT COMMAND request_id=2 result=accepted")
+    duplicate = lab.command(command, (True, 1))
+    require(duplicate["duplicate"] is True and duplicate["reason"] == "duplicate", str(duplicate))
     cases = [
         ("not-json", "invalid"),
         ('{"v":1,"request_id":3,"command":"set_switch"}', "invalid"),
@@ -205,12 +209,11 @@ def invalid(lab):
     for payload, reason in cases:
         ack = lab.command(payload, (False, 1))
         require(ack["reason"] == reason, f"wrong rejection: {ack}")
-    duplicate = lab.command('{"v":1,"request_id":2,"command":"set_switch","value":1}', (True, 1))
-    require(duplicate["duplicate"] is True and duplicate["reason"] == "duplicate", str(duplicate))
     no_ack = lab.subscriber(lab.prefix + "/ack", timeout=1)
-    lab.publish(lab.prefix + "/wrong", '{"v":1,"request_id":4,"command":"set_switch","value":0}')
+    lab.publish(f"lab/other-{lab.run_id}/{lab.device_id}/command",
+                '{"v":1,"request_id":4,"command":"set_switch","value":0}')
     output, _ = no_ack.communicate(timeout=3)
-    require(no_ack.returncode != 0 and not output.strip(), "wrong topic generated ACK")
+    require(no_ack.returncode != 0 and not output.strip(), "other run's topic generated ACK")
     final = lab.command('{"v":1,"request_id":3,"command":"set_switch","value":0}', (True, 0))
     require(final["reason"] == "ok", str(final))
     lab.wait_device("result=duplicate")
@@ -229,8 +232,12 @@ def reconnect(lab):
     lab.wait_device("EVENT RUNNING", count=2, timeout=8)
     ack = lab.command('{"v":1,"request_id":9,"command":"set_switch","value":1}', (True, 1))
     require(ack["reason"] == "ok", str(ack))
+    repeat = lab.command('{"v":1,"request_id":9,"command":"set_switch","value":1}', (True, 1))
+    stale = lab.command('{"v":1,"request_id":8,"command":"set_switch","value":0}', (False, 1))
+    require(repeat["duplicate"] is True and stale["reason"] == "stale",
+            f"deduplication lost after reconnect: {repeat}, {stale}")
     require("EVENT RECONNECT_ATTEMPT" in text(lab.device_log), "no bounded reconnect attempt")
-    print(f"TRACE reconnect={ack}")
+    print(f"TRACE reconnect={ack} repeat={repeat} stale={stale}")
 
 
 def unavailable(lab):
@@ -280,6 +287,9 @@ def connect_timeout(lab):
         log = text(lab.device_log)
         require("EVENT RUNNING" not in log and "EVENT TELEMETRY_QUEUED" not in log,
                 "silent TCP peer was misreported as a Broker")
+        stop(lab.client)
+        require(lab.client.returncode == 0 and "STATE STOPPED" in text(lab.device_log),
+                f"stop during pending connect did not cleanly exit: {text(lab.device_log)}")
     print("TRACE connect_timeout=detected")
 
 
