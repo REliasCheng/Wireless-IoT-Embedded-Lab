@@ -32,10 +32,10 @@ Aliyun IoT
 
 ## 凭据边界
 
-当前默认分支不包含 broker address、username、password、client ID、topic、certificate 或 private key。未来实现应通过安全配置注入这些值，不应提交真实凭据。
+当前默认分支的 Host 测试会启动真实 Mosquitto Broker，但仅监听 `127.0.0.1` 的随机测试端口，使用生成的 Client ID 和 `lab/<run-id>/<device-id>/...` Topic。没有外部或生产 Broker、阿里云 username/password、设备签名、certificate 或 private key。未来目标/云端实现应通过安全配置注入凭据，不应提交真实凭据。
 
 ## 安全边界
 
-当前仓库没有 MQTTS、证书校验或 TLS session 证据。详见 [Security Boundaries](security-boundaries.md)。
+当前 Host MQTT 真实联调使用明文回环 TCP；没有 MQTTS、证书校验、TLS session 或阿里云上线证据。Host 的实际消息与状态合同见 [Host MQTT runtime](host-mqtt-runtime.md)，安全边界见 [Security Boundaries](security-boundaries.md)。
 
 [上一篇：TCP & lwIP](tcp-and-lwip.md) · [返回 README](../README.md) · [下一篇：Classic Bluetooth SPP](bluetooth-classic.md)

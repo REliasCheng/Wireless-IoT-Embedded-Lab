@@ -6,16 +6,16 @@
 
 ## Credentials
 
-- 当前默认分支不包含 Wi-Fi SSID/password、MQTT broker address、username、password、client ID 或 topics。
+- 当前默认分支不包含 Wi-Fi SSID/password、真实云 Broker 地址、username 或 password。Host 测试只使用固定回环地址、运行时生成的 Client ID 和实验室 Topic。
 - 当前默认分支不包含 SDK TLS/private-key test fixtures、host-side credential examples 或 editor recovery files。
 - 旧提交仍可能保留历史风险；本次普通提交没有改写历史。
 
 ## Evidence Boundary
 
-架构文档说明协议层次，但不证明：
+Host 测试可证明本地 Broker 上的真实 TCP MQTT 收发、命令确认与重连；这些结果不证明：
 
 - 设备已经云端上线。
-- MQTT Publish/Subscribe 已经本轮实机验证。
+- MQTT Publish/Subscribe 已在真实 JieLi 设备上验证。
 - Bluetooth SPP 或 BLE 连接已验证。
 - 传输链路已加密。
 - 凭据生命周期或安全存储已实现。

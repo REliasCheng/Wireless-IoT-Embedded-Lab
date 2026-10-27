@@ -1,0 +1,62 @@
+name: Host MQTT
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  network:
+    name: ${{ matrix.compiler }} / real Broker
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+      - name: Install official distribution Broker and C client
+        run: sudo apt-get update && sudo apt-get install -y ninja-build mosquitto mosquitto-clients libmosquitto-dev pkg-config
+      - name: Record dependency versions
+        run: |
+          dpkg-query -W mosquitto mosquitto-clients libmosquitto-dev libmosquitto1
+          pkg-config --modversion libmosquitto
+          ${{ matrix.compiler }} --version | head -n 1
+      - name: Configure and build
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=${{ matrix.compiler }}
+          cmake --build build --parallel 4
+      - name: Unit and real TCP MQTT integration
+        run: ctest --test-dir build --output-on-failure
+      - name: Repeat QoS1 and reconnect integration
+        run: ctest --test-dir build --output-on-failure --repeat until-fail:3 -R 'mqtt_(normal_qos1|reconnect)'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mqtt-evidence-${{ matrix.compiler }}
+          path: build/artifacts/
+          if-no-files-found: warn
+
+  sanitizers:
+    name: ASan + UBSan / application and adapter
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+      - name: Install Broker and C client
+        run: sudo apt-get update && sudo apt-get install -y ninja-build mosquitto mosquitto-clients libmosquitto-dev pkg-config
+      - name: Configure and build instrumented application
+        run: |
+          cmake -S . -B build-san -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=clang -DCMAKE_C_FLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer' -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'
+          cmake --build build-san --parallel 4
+      - name: Test model and real network adapter
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: ctest --test-dir build-san --output-on-failure
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mqtt-evidence-sanitizers
+          path: build-san/artifacts/
+          if-no-files-found: warn

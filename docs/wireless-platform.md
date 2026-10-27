@@ -14,7 +14,7 @@ Application
 
 ## Current Boundary
 
-当前默认分支不包含应用、配置、SDK、radio binary 或 vendor toolchain。Native Wi-Fi、Classic Bluetooth 与 BLE 的启用状态必须由未来实现明确配置；本文档只定义技术路线。
+当前默认分支已有独立的 **Host loopback MQTT 应用**，见 [Host MQTT runtime](host-mqtt-runtime.md)。它不包含 JieLi 目标应用、SDK、radio binary 或 vendor toolchain。Native Wi-Fi、Classic Bluetooth 与 BLE 的启用状态仍须在未来目标实现中明确配置；本文其余部分只定义历史技术路线。
 
 ## 与其他仓库的边界
 

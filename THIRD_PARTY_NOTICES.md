@@ -1,13 +1,14 @@
 # Third-Party Notices
 
-## Current Default Branch
+## Eclipse Mosquitto
 
-The current default branch distributes no JieLi SDK source, `itheima` course code, Paho MQTT source or interface copy, FreeRTOS source, vendor binary, certificate, private key, external image, font, or firmware artifact.
+- Official upstream: https://github.com/eclipse-mosquitto/mosquitto and https://mosquitto.org/
+- Components: Mosquitto Broker, libmosquitto C client library, `mosquitto_pub` and `mosquitto_sub` test clients.
+- Integration: Ubuntu 24.04 distribution packages `mosquitto`, `mosquitto-clients`, `libmosquitto-dev`; CI prints their actual installed versions. No upstream source or binaries are committed to this repository.
+- Upstream license: Eclipse Public License 2.0 OR Eclipse Distribution License 1.0 (SPDX `EPL-2.0 OR BSD-3-Clause`). The distribution retains the corresponding upstream notices.
 
-## Referenced Technologies
+## Repository code and exclusions
 
-Documentation may refer to JieLi AC79/WL82, Native Wi-Fi, lwIP, MQTT, Paho, FreeRTOS, Classic Bluetooth, BLE, and Aliyun IoT. These references provide technical context only and do not redistribute or relicense those components.
+The device model, restricted JSON protocol parser, Host MQTT adapter, test harness, CI and new documentation are original repository work under its root MIT license. That license does not relicense Mosquitto or any historical vendor/course material.
 
-## Excluded Source Material
-
-Course additions, uncertain SDK subsets, credential-bearing examples, TLS fixtures, complete protocol stacks, vendor tools, and files without established redistribution permission are excluded from the current default branch. Earlier commits remain reachable because repository history was not rewritten.
+No JieLi SDK, Paho source, FreeRTOS source, `itheima` course application, unknown-rights asset, cloud account configuration, Wi-Fi password, certificate or private key is imported. Historic commits have not been rewritten; their separate provenance risks remain separate from this Host foundation. See [source provenance](docs/source-provenance.md).

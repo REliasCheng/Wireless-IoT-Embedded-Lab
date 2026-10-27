@@ -26,6 +26,6 @@ MQTT client 的 network adapter 同样建立在 TCP 连接之上。本文档只�
 
 ## 快照限制
 
-完整 lwIP 源码、vendor network binary 和应用实现未进入当前默认分支。本文只分析应用、socket 接口和无线事件之间的关系，不是 standalone build。
+完整 lwIP 源码和 vendor network binary 未进入当前默认分支。新的 [Host MQTT 应用](host-mqtt-runtime.md)可独立构建并通过回环 TCP 联调，但不使用 JieLi socket wrapper 或 lwIP，也不证明 Wi-Fi 网络就绪。
 
 [上一篇：Native Wi-Fi Networking](wifi-networking.md) · [返回 README](../README.md) · [下一篇：MQTT & Aliyun IoT](mqtt-and-aliyun.md)
