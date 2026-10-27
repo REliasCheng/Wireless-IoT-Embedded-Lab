@@ -47,7 +47,7 @@ ACKs are separate application results, for example:
 
 A higher request ID applies an idempotent switch assignment. Repeating the latest ID and value yields `accepted=true, duplicate=true` without applying again. The same ID with a different value is `conflict`; a lower ID is `stale`. Invalid messages preserve the switch and use request ID 0 when the ID cannot be parsed. The model counts rejected and duplicate commands separately. No persistence is implemented: deduplication state and outgoing queue do not survive process restart.
 
-The invalid-command integration scenario first publishes a valid command while no ACK subscriber exists, then resends the same request and verifies a duplicate ACK and unchanged switch state. It also sends a command to another run's Topic and checks that this device emits no ACK. The reconnect scenario checks duplicate and stale requests again after a new SUBACK.
+The invalid-command integration scenario receives and deliberately discards a valid command's first ACK at the test application layer, then resends the same request and verifies a duplicate ACK and unchanged switch state. It also sends a command to another run's Topic and checks that this device emits no ACK. The reconnect scenario checks duplicate and stale requests again after a new SUBACK.
 
 ## Lifecycle and delivery levels
 

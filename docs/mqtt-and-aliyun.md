@@ -32,7 +32,7 @@ Aliyun IoT
 
 ## 凭据边界
 
-当前默认分支的 Host 测试仅使用 `127.0.0.1`、随机测试端口、生成的 Client ID 和 `lab/<run-id>/<device-id>/...` Topic。没有真实 Broker、阿里云 username/password、设备签名、certificate 或 private key。未来目标/云端实现应通过安全配置注入凭据，不应提交真实凭据。
+当前默认分支的 Host 测试会启动真实 Mosquitto Broker，但仅监听 `127.0.0.1` 的随机测试端口，使用生成的 Client ID 和 `lab/<run-id>/<device-id>/...` Topic。没有外部或生产 Broker、阿里云 username/password、设备签名、certificate 或 private key。未来目标/云端实现应通过安全配置注入凭据，不应提交真实凭据。
 
 ## 安全边界
 

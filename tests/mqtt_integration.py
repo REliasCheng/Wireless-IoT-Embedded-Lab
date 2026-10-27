@@ -191,9 +191,9 @@ def invalid(lab):
     lab.start_device()
     lab.wait_device("EVENT RUNNING")
     command = '{"v":1,"request_id":2,"command":"set_switch","value":1}'
-    # No ACK subscriber exists for this first send; retry must be idempotent.
-    lab.publish(lab.prefix + "/command", command)
-    lab.wait_device("EVENT COMMAND request_id=2 result=accepted")
+    # Discard the first application ACK, then retry the same request ID.
+    first = lab.command(command, (True, 1))
+    require(first["reason"] == "ok", str(first))
     duplicate = lab.command(command, (True, 1))
     require(duplicate["duplicate"] is True and duplicate["reason"] == "duplicate", str(duplicate))
     cases = [
