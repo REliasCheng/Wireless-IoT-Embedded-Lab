@@ -104,7 +104,10 @@ class Lab:
                 raise RuntimeError(f"device exited rc={self.client.returncode}: {data}")
             return data.count(marker) >= count
 
-        until(seen, timeout, f"missing device marker {marker!r}: {text(self.device_log)}")
+        try:
+            until(seen, timeout, f"missing device marker {marker!r}")
+        except RuntimeError as error:
+            raise RuntimeError(f"{error}; current device log: {text(self.device_log)}") from error
 
     def subscriber(self, topic, timeout=7):
         tag = uuid.uuid4().hex[:8]
@@ -260,7 +263,9 @@ def publish_failure(lab):
     lab.wait_device("EVENT INJECT_PUBLISH_FAILURE")
     lab.wait_device("EVENT RUNNING", count=2, timeout=8)
     message = lab.receive(telemetry_sub)
-    require(message["sequence"] == 1 and "reason=telemetry_publish_failed" in text(lab.device_log),
+    log = text(lab.device_log)
+    require(message["sequence"] == 1 and "EVENT INJECT_PUBLISH_FAILURE" in log and
+            "STATE BACKOFF" in log and log.count("EVENT RUNNING") >= 2,
             f"failed publish counted as delivery: {message}")
     print(f"TRACE publish_failure_recovered={message}")
 
