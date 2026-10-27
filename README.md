@@ -14,7 +14,7 @@ cmake --build build --parallel
 ctest --test-dir build --output-on-failure
 ```
 
-The tests launch an actual Broker on `127.0.0.1` with a temporary listener, and separate `mosquitto_sub` / `mosquitto_pub` clients verify the network path. Scenarios are `normal_qos0`, `normal_qos1`, `invalid_command`, `reconnect`, and `unavailable`. They have bounded waits and exit codes. Generated test logs are saved under `artifacts/` and ignored by Git. The CI workflow repeats QoS 1 and reconnect tests and runs ASan/UBSan on the application; it records installed package versions.
+The tests launch an actual Broker on `127.0.0.1` with a temporary listener, and separate `mosquitto_sub` / `mosquitto_pub` clients verify the network path. Scenarios cover QoS 0/1, invalid commands, disconnect/reconnect, unavailable Broker, subscription and publish failure injection, a silent TCP peer, and Client ID collision. They have bounded waits and exit codes. Generated test logs are saved under the build directory's `artifacts/` and ignored by Git. The CI workflow repeats QoS 1 and reconnect tests and runs ASan/UBSan on the application; it records installed package versions.
 
 For a platform without libmosquitto, the portable model can be built alone:
 

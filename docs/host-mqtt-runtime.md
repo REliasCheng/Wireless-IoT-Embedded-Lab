@@ -19,7 +19,7 @@ ctest --test-dir build --output-on-failure --repeat until-fail:3 -R 'mqtt_(norma
 
 For the portable model alone, set `-DIOT_ENABLE_NETWORK=OFF`. The full network integration needs the official distribution packages. CI records their exact installed package versions; the project does not invent a source commit for Ubuntu packages.
 
-The bounded device executable is `./build/iot_device --port PORT --run-id RUN --device-id DEVICE --qos 1 --duration-ms 10000`. It connects only to `127.0.0.1`. `tests/mqtt_integration.py` coordinates the Broker, device and independent `mosquitto_sub` / `mosquitto_pub` clients. Its `normal_qos0`, `normal_qos1`, `invalid_command`, `reconnect`, and `unavailable` scenarios have explicit exit codes, test timeouts and retained logs. Run IDs isolate Topics and Client IDs; port selection checks a free loopback port and reports a startup collision instead of killing its owner.
+The bounded device executable is `./build/iot_device --port PORT --run-id RUN --device-id DEVICE --qos 1 --duration-ms 10000`. It connects only to `127.0.0.1`. `tests/mqtt_integration.py` coordinates the Broker, device and independent `mosquitto_sub` / `mosquitto_pub` clients. Its nine scenarios cover `normal_qos0`, `normal_qos1`, `invalid_command`, `reconnect`, `unavailable`, `subscribe_failure`, `publish_failure`, `connect_timeout`, and `client_id_collision`. They have explicit exit codes, test timeouts and retained logs. Run IDs isolate Topics and Client IDs; port selection checks a free loopback port and reports a startup collision instead of killing its owner.
 
 ## Protocol
 
@@ -49,7 +49,7 @@ A higher request ID applies an idempotent switch assignment. Repeating the lates
 
 ## Lifecycle and delivery levels
 
-The client moves through INITIALIZED → CONNECTING → CONNECTED → SUBSCRIBED → RUNNING. A TCP/MQTT failure enters BACKOFF; attempts are 100, 200, 400, then at most 800 ms apart, with a configurable retry limit and 2-second CONNACK deadline. Reconnection uses Clean Session and therefore submits a new SUBSCRIBE; only its SUBACK restores RUNNING. The harness kills only its own Broker, observes BACKOFF, restarts it, waits for the second RUNNING event, then verifies a new Command/ACK.
+The client moves through INITIALIZED → CONNECTING → CONNECTED → SUBSCRIBED → RUNNING. A TCP/MQTT failure enters BACKOFF; attempts are 100, 200, 400, then at most 800 ms apart, with a configurable retry limit and 2-second CONNACK and SUBACK deadlines. Reconnection uses Clean Session and therefore submits a new SUBSCRIBE; only its SUBACK restores RUNNING. The harness kills only its own Broker, observes BACKOFF and a failed reconnect attempt, restarts it, waits for the second RUNNING event, then verifies a new Command/ACK. Additional negative fixtures inject one local subscribe or publish failure, hold a silent loopback TCP peer without CONNACK, and create a competing client with the same Client ID; these are explicitly labeled fault tests and are not counted as normal Broker delivery.
 
 `TELEMETRY_QUEUED` means libmosquitto accepted a local publish request. For QoS 1, the publish callback records a protocol completion/PUBACK count. Neither event proves that an independent subscriber processed the data; the harness separately asserts its received Topic/Payload. QoS 0 has no delivery confirmation. QoS 1 is at least once, so the application request ID handles duplicates. No exactly-once end-to-end, offline persistence, real cloud transport, or TLS claim is made.
 

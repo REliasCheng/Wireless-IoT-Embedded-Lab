@@ -61,6 +61,7 @@ class Lab:
         self.device_exe = device
         self.broker = None
         self.client = None
+        self.other_client = None
         self._handles = []
         self.prefix = f"lab/{self.run_id}/{self.device_id}"
 
@@ -86,13 +87,13 @@ class Lab:
 
         until(ready, 5, "broker did not bind loopback port")
 
-    def start_device(self, qos=1, max_retries=20):
+    def start_device(self, qos=1, max_retries=20, extra=()):
         handle = self.device_log.open("ab")
         self._handles.append(handle)
         self.client = subprocess.Popen(
             [str(self.device_exe), "--port", str(self.port), "--run-id", self.run_id,
              "--device-id", self.device_id, "--qos", str(qos),
-             "--duration-ms", "18000", "--max-retries", str(max_retries)],
+             "--duration-ms", "18000", "--max-retries", str(max_retries), *extra],
             stdout=handle, stderr=subprocess.STDOUT,
         )
 
@@ -152,6 +153,7 @@ class Lab:
         return ack
 
     def finish(self, passed):
+        stop(self.other_client)
         stop(self.client)
         stop(self.broker)
         for handle in self._handles:
@@ -218,6 +220,8 @@ def reconnect(lab):
     lab.wait_device("EVENT RUNNING")
     stop(lab.broker)
     lab.wait_device("STATE BACKOFF", timeout=5)
+    lab.wait_device("EVENT RECONNECT_ATTEMPT", timeout=4)
+    lab.wait_device("reason=reconnect_failed", timeout=4)
     lab.start_broker()
     lab.wait_device("EVENT RUNNING", count=2, timeout=8)
     ack = lab.command('{"v":1,"request_id":9,"command":"set_switch","value":1}', (True, 1))
@@ -238,10 +242,69 @@ def unavailable(lab):
     print("TRACE unavailable=retry_exhausted attempts=3")
 
 
+def subscribe_failure(lab):
+    lab.start_broker()
+    lab.start_device(extra=("--inject-subscribe-fail-once",))
+    lab.wait_device("EVENT INJECT_SUBSCRIBE_FAILURE")
+    lab.wait_device("EVENT RUNNING", timeout=8)
+    require("STATE BACKOFF" in text(lab.device_log) and
+            "EVENT RECONNECT_ATTEMPT" in text(lab.device_log), "subscription failure not recovered")
+    ack = lab.command('{"v":1,"request_id":11,"command":"set_switch","value":1}', (True, 1))
+    print(f"TRACE subscribe_failure_recovered={ack}")
+
+
+def publish_failure(lab):
+    lab.start_broker()
+    telemetry_sub = lab.subscriber(lab.prefix + "/telemetry")
+    lab.start_device(extra=("--inject-publish-fail-once",))
+    lab.wait_device("EVENT INJECT_PUBLISH_FAILURE")
+    lab.wait_device("EVENT RUNNING", count=2, timeout=8)
+    message = lab.receive(telemetry_sub)
+    require(message["sequence"] == 1 and "reason=telemetry_publish_failed" in text(lab.device_log),
+            f"failed publish counted as delivery: {message}")
+    print(f"TRACE publish_failure_recovered={message}")
+
+
+def connect_timeout(lab):
+    with socket.socket() as silent_peer:
+        silent_peer.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        silent_peer.bind(("127.0.0.1", lab.port))
+        silent_peer.listen(2)
+        lab.start_device(max_retries=2)
+        lab.wait_device("reason=connect_timeout", timeout=6)
+        log = text(lab.device_log)
+        require("EVENT RUNNING" not in log and "EVENT TELEMETRY_QUEUED" not in log,
+                "silent TCP peer was misreported as a Broker")
+    print("TRACE connect_timeout=detected")
+
+
+def client_id_collision(lab):
+    lab.start_broker()
+    lab.start_device()
+    lab.wait_device("EVENT RUNNING")
+    other_log = lab.root / "collision-device.log"
+    handle = other_log.open("wb")
+    lab._handles.append(handle)
+    lab.other_client = subprocess.Popen(
+        [str(lab.device_exe), "--port", str(lab.port), "--run-id", lab.run_id,
+         "--device-id", lab.device_id, "--duration-ms", "4000"],
+        stdout=handle, stderr=subprocess.STDOUT,
+    )
+    until(lambda: "EVENT RUNNING" in text(other_log), 5,
+          f"collision client did not connect: {text(other_log)}")
+    lab.wait_device("STATE BACKOFF", timeout=5)
+    stop(lab.other_client)
+    lab.wait_device("EVENT RUNNING", count=2, timeout=8)
+    ack = lab.command('{"v":1,"request_id":13,"command":"set_switch","value":1}', (True, 1))
+    print(f"TRACE client_id_collision_recovered={ack}")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--scenario", required=True,
-                        choices=["normal_qos0", "normal_qos1", "invalid_command", "reconnect", "unavailable"])
+                        choices=["normal_qos0", "normal_qos1", "invalid_command", "reconnect",
+                                 "unavailable", "subscribe_failure", "publish_failure",
+                                 "connect_timeout", "client_id_collision"])
     parser.add_argument("--device", type=Path, required=True)
     args = parser.parse_args()
     lab = Lab(args.scenario, args.device)
@@ -251,7 +314,11 @@ def main():
         elif args.scenario == "normal_qos1": normal(lab, 1)
         elif args.scenario == "invalid_command": invalid(lab)
         elif args.scenario == "reconnect": reconnect(lab)
-        else: unavailable(lab)
+        elif args.scenario == "unavailable": unavailable(lab)
+        elif args.scenario == "subscribe_failure": subscribe_failure(lab)
+        elif args.scenario == "publish_failure": publish_failure(lab)
+        elif args.scenario == "connect_timeout": connect_timeout(lab)
+        else: client_id_collision(lab)
         passed = True
     finally:
         lab.finish(passed)

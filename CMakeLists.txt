@@ -21,7 +21,8 @@ if(IOT_ENABLE_NETWORK)
   add_executable(iot_device app/host_mqtt_device.c)
   target_link_libraries(iot_device PRIVATE device_model PkgConfig::MOSQUITTO)
   if(BUILD_TESTING)
-    foreach(scenario normal_qos0 normal_qos1 invalid_command reconnect unavailable)
+    foreach(scenario normal_qos0 normal_qos1 invalid_command reconnect unavailable
+                     subscribe_failure publish_failure connect_timeout client_id_collision)
       add_test(NAME mqtt_${scenario}
         COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/mqtt_integration.py
         --scenario ${scenario} --device $<TARGET_FILE:iot_device>)

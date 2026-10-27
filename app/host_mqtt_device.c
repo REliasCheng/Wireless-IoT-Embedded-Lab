@@ -14,7 +14,7 @@ typedef struct {
     int port, qos, subscribe_mid;
     unsigned retries, max_retries;
     uint64_t next_retry_ms, connect_deadline_ms, subscribe_deadline_ms, last_telemetry_ms, end_ms;
-    bool stopping, fatal;
+    bool stopping, fatal, inject_subscribe_fail_once, inject_publish_fail_once;
 } service_t;
 
 static volatile sig_atomic_t stop_requested;
@@ -54,8 +54,14 @@ static void on_connect(struct mosquitto *client, void *user, int rc)
     if(rc != 0) { backoff(s, "connack_rejected"); return; }
     state(s, DEVICE_CONNECTED);
     if(s->fatal) return;
-    s->retries = 0;
-    int result = mosquitto_subscribe(client, &s->subscribe_mid, s->model.command_topic, 1);
+    int result;
+    if(s->inject_subscribe_fail_once) {
+        s->inject_subscribe_fail_once = false;
+        result = MOSQ_ERR_NOMEM;
+        puts("EVENT INJECT_SUBSCRIBE_FAILURE");
+        fflush(stdout);
+    }
+    else result = mosquitto_subscribe(client, &s->subscribe_mid, s->model.command_topic, 1);
     if(result != MOSQ_ERR_SUCCESS) {
         mosquitto_disconnect(client);
         backoff(s, "subscribe_enqueue_failed");
@@ -77,6 +83,7 @@ static void on_subscribe(struct mosquitto *unused, void *user, int mid, int qos_
     }
     state(s, DEVICE_SUBSCRIBED);
     state(s, DEVICE_RUNNING);
+    s->retries = 0;
     s->last_telemetry_ms = now_ms();
     printf("EVENT RUNNING subscribed=%s qos=%d\n", s->model.command_topic, granted_qos[0]);
     fflush(stdout);
@@ -139,6 +146,14 @@ static bool args(int argc, char **argv, service_t *s)
     const char *run = NULL, *id = NULL;
     unsigned port = 0, qos = 1, duration = 15000, retries = 20;
     for(int i = 1; i < argc; i++) {
+        if(strcmp(argv[i], "--inject-subscribe-fail-once") == 0) {
+            s->inject_subscribe_fail_once = true;
+            continue;
+        }
+        if(strcmp(argv[i], "--inject-publish-fail-once") == 0) {
+            s->inject_publish_fail_once = true;
+            continue;
+        }
         if(i + 1 >= argc) return false;
         if(strcmp(argv[i], "--port") == 0) { if(!number(argv[++i], 1, 65535, &port)) return false; }
         else if(strcmp(argv[i], "--run-id") == 0) run = argv[++i];
@@ -218,15 +233,24 @@ int main(int argc, char **argv)
         }
         if(s.model.state == DEVICE_RUNNING && now - s.last_telemetry_ms >= 500) {
             if(!device_telemetry_json(&s.model, payload, sizeof(payload))) { s.fatal = true; break; }
-            rc = mosquitto_publish(s.client, NULL, s.model.telemetry_topic,
-                                   (int)strlen(payload), payload, s.qos, false);
+            if(s.inject_publish_fail_once) {
+                s.inject_publish_fail_once = false;
+                rc = MOSQ_ERR_NO_CONN;
+                puts("EVENT INJECT_PUBLISH_FAILURE");
+                fflush(stdout);
+            }
+            else rc = mosquitto_publish(s.client, NULL, s.model.telemetry_topic,
+                                        (int)strlen(payload), payload, s.qos, false);
             if(rc == MOSQ_ERR_SUCCESS) {
                 device_telemetry_queued(&s.model, now);
                 s.last_telemetry_ms = now;
                 printf("EVENT TELEMETRY_QUEUED qos=%d %s\n", s.qos, payload);
                 fflush(stdout);
             }
-            else backoff(&s, "telemetry_publish_failed");
+            else {
+                mosquitto_disconnect(s.client);
+                backoff(&s, "telemetry_publish_failed");
+            }
         }
         if(s.model.state != DEVICE_BACKOFF && s.model.state != DEVICE_FAILED) {
             rc = mosquitto_loop(s.client, 50, 1);
