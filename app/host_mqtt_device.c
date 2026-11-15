@@ -111,7 +111,7 @@ static void on_message(struct mosquitto *client, void *user, const struct mosqui
     service_t *s = user;
     command_ack_t ack;
     char payload[DEVICE_PAYLOAD_MAX + 1];
-    if(message == NULL || message->topic == NULL ||
+    if(s->model.state != DEVICE_RUNNING || message == NULL || message->topic == NULL ||
        strcmp(message->topic, s->model.command_topic) != 0 || message->payloadlen < 0) return;
     command_result_t result = device_apply_command(&s->model, message->payload,
                                                     (size_t)message->payloadlen, &ack);
