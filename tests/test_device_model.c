@@ -12,6 +12,18 @@ static command_result_t cmd(device_model_t *d, const char *payload, command_ack_
 
 int main(void)
 {
+    int granted_qos = 1;
+    assert(device_suback_grants_qos(1, 7, 7, 1, &granted_qos));
+    granted_qos = 0;
+    assert(!device_suback_grants_qos(1, 7, 7, 1, &granted_qos));
+    assert(device_suback_grants_qos(0, 7, 7, 1, &granted_qos));
+    granted_qos = 0x80;
+    assert(!device_suback_grants_qos(1, 7, 7, 1, &granted_qos));
+    granted_qos = 3;
+    assert(!device_suback_grants_qos(1, 7, 7, 1, &granted_qos));
+    assert(!device_suback_grants_qos(1, 8, 7, 1, &granted_qos));
+    assert(!device_suback_grants_qos(1, 7, 7, 0, &granted_qos));
+    assert(!device_suback_grants_qos(1, 7, 7, 1, NULL));
     device_model_t d;
     command_ack_t ack;
     char out[DEVICE_PAYLOAD_MAX + 1];
