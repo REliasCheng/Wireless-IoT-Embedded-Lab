@@ -50,6 +50,8 @@ bool device_init(device_model_t *device, const char *run_id, const char *device_
 bool device_transition(device_model_t *device, device_state_t next);
 const char *device_state_name(device_state_t state);
 unsigned device_backoff_ms(unsigned attempt);
+bool device_suback_grants_qos(int requested_qos, int mid, int expected_mid,
+                              int qos_count, const int *granted_qos);
 bool device_telemetry_json(const device_model_t *device, char *out, size_t capacity);
 bool device_ack_json(const command_ack_t *ack, char *out, size_t capacity);
 command_result_t device_apply_command(device_model_t *device, const void *payload,

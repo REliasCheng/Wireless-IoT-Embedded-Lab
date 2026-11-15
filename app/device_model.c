@@ -1,5 +1,13 @@
 #include "device_model.h"
 
+bool device_suback_grants_qos(int requested_qos, int mid, int expected_mid,
+                              int qos_count, const int *granted_qos)
+{
+    return requested_qos >= 0 && requested_qos <= 2 &&
+           mid == expected_mid && qos_count == 1 && granted_qos != NULL &&
+           granted_qos[0] >= requested_qos && granted_qos[0] <= 2;
+}
+
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>

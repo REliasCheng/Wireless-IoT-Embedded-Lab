@@ -76,7 +76,7 @@ static void on_subscribe(struct mosquitto *unused, void *user, int mid, int qos_
 {
     (void)unused;
     service_t *s = user;
-    if(mid != s->subscribe_mid || qos_count != 1 || granted_qos == NULL || granted_qos[0] == 0x80) {
+    if(!device_suback_grants_qos(1, mid, s->subscribe_mid, qos_count, granted_qos)) {
         backoff(s, "suback_failed");
         mosquitto_disconnect(s->client);
         return;
